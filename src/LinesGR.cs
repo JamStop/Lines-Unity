@@ -27,7 +27,7 @@ public class LinesGR : MonoBehaviour {
 	
 	private float speed = 5.0f;
 
-
+	// Initializers
 	void Start () {
 		labelStyle = new GUIStyle();
 		labelStyle.normal.textColor = Color.black;
@@ -45,16 +45,22 @@ public class LinesGR : MonoBehaviour {
 
 	}
 
+	// Drawing
 	void Update() {
+
+		// Get input
 		if(Input.GetMouseButton(0)) {
-			
+
+			// Get current position
 			Vector3 e = GetNewPoint();
-			
+
+			// Marks the first point in the update
 			if(first == null) {
 				first = new Point();
 				first.p = transform.InverseTransformPoint(e);
 			}
-			
+
+
 			if(s != Vector3.zero) {
 				Vector3 ls = transform.TransformPoint(s);
 				AddLine(ml, MakeQuad(ls, e, lineSize), false);
@@ -104,7 +110,8 @@ public class LinesGR : MonoBehaviour {
 
 		return q;
 	}
-	
+
+
 	void AddLine(Mesh m, Vector3[] quad, bool tmp) {
 			int vl = m.vertices.Length;
 			
@@ -133,7 +140,8 @@ public class LinesGR : MonoBehaviour {
 			m.triangles = ts;
 			m.RecalculateBounds();
 	}
-	
+
+	// Turn 3D space, not difficult, uses Unity rotation
 	void processInput() {
 		float s = speed * Time.deltaTime;
 		if(Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift)) s = s * 10;
@@ -149,23 +157,28 @@ public class LinesGR : MonoBehaviour {
 			first = null;
 		}
 	}
-	
+
+	// Get current mouse position
 	Vector3 GetNewPoint() {
 		return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z * -1.0f));
 	}
-	
+
+
 	Vector3[] resizeVertices(Vector3[] ovs, int ns) {
 		Vector3[] nvs = new Vector3[ovs.Length + ns];
 		for(int i = 0; i < ovs.Length; i++) nvs[i] = ovs[i];
 		return nvs;
 	}
-	
+
+
 	int[] resizeTraingles(int[] ovs, int ns) {
 		int[] nvs = new int[ovs.Length + ns];
 		for(int i = 0; i < ovs.Length; i++) nvs[i] = ovs[i];
 		return nvs;
 	}
-	
+
+
+	// Adds items/links to the GUI, not necessary
 	void OnGUI() {
 		GUI.Label (new Rect (10, 10, 300, 24), "GR. Cursor keys to rotate (fast with Shift)", labelStyle);
 		int vc = ml.vertices.Length + ms.vertices.Length;
@@ -178,6 +191,8 @@ public class LinesGR : MonoBehaviour {
 	}
 	
 	/** Replace the Update function with this one for a click&drag drawing option */
+
+	// A line drag update, not necessary
 	void Update1() {
 		processInput();
 		
